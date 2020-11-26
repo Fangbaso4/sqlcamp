@@ -3,9 +3,48 @@
 #### 介绍
 sql 训练营
 
-#### 软件架构
-软件架构说明
+# sql 训练营
 
+## sql query 结构认知(DQL)
+
+[^SQL 是用于访问和处理数据库的标准的计算机语言，是结构化查询语言(Structured Query Language)的简称]: 
+
+<!--DQL，英文叫做 Data Query Language，数据查询语言，用来查询想要的记录，是 SQL 语言中的重要组成部分。在实际的工作中，绝大多数情况下都在和查询打交道，因此学会编写正确且高效的查询语句，是重中之重。-->
+
+- **书写顺序：** select ... from ... join on ... where ... group by ... having ... order by ... limit
+- **执行顺序：** from ... join on ... where ... group by ... having ... select ... order by ... limit
+
+### SELECT 部分练习
+
+* [1.语法示例](#1)
+* [点击跳转](#jump)
+* 
+
+### from 部分练习
+
+### where 部分练习
+
+### group 部分练习
+
+### orderby 部分练习
+
+<h2 id="1">1.语法示例</h2>
+
+#### 函数
+
+<span id="jump">跳转到的地方</span>
+
+## DML 语句练习
+
+## 进阶链接
+
+- [pl/sql 编程训练]()
+
+## 参考链接
+
+- [菜鸟教程](https://www.runoob.com/sql/sql-tutorial.html)
+- []()
+- []()
 
 #### 安装教程
 
