@@ -74,8 +74,8 @@
 
 ## reference
 
-- [ORACLE官方SQL*Plus指引手册](https://docs.oracle.com/cd/B19306_01/server.102/b14357/qstart.htm)
-- 
+- [ORACLE 官方SQL*Plus QuickStart](https://docs.oracle.com/cd/B19306_01/server.102/b14357/qstart.htm)
+- [ORACLE 官方介绍](https://docs.oracle.com/en/database/oracle/oracle-database/21/sqpug/SQL-Plus-user-interface.html#)
 
 ```css
 - 
