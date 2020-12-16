@@ -150,7 +150,7 @@
          ORDER BY department_name;
       ``````
 
-      ![sqljoins](E:\GIT\sqlcamp\sql-camp\references\sqljoins.jpg)
+      ![sqljoins](https://github.com/Fangbaso4/sqlcamp/blob/master/references/sqljoins.jpg)
 
 - #### 子查询 `Subqueries`
 
@@ -235,7 +235,7 @@
 
 > 本营不涉及数组集合等其他数据库对象，仅对数据集合操作的 sql 书写进行介绍。同样的维恩图对于理解SQL的集合操作有很大的帮助。
 
-![sqlunion](E:\GIT\sqlcamp\sql-camp\references\sqlunion.png)
+![sqlunion](https://github.com/Fangbaso4/sqlcamp/blob/master/references/sqlunion.png)
 
 - 并集
   - UNION (带去重)
