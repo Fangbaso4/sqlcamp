@@ -18,7 +18,9 @@
 
 `from ... join on ... where ... group by ... having ... select ... order by ...`
 
-## from / join 部分(`source_list`)
+## FROM 部分(`source_list`)
+
+> FROM 子句列出了所有的数据查询对象，这个对象可以是表、视图、物化视图、分区、子分区 也可以是子查询生成的子对象。
 
 ### 单表查询
 
@@ -74,7 +76,7 @@
        ORDER BY e1.last_name;
       ``````
 
-  - 笛卡尔积 `Cartesian Products`
+  - 笛卡尔积/交叉连接 `Cartesian Products`
 
     - 当两个表没有连接条件，或者连接条件是实际上不成立的时候，Oracle数据库将返回其笛卡尔积。即，将A表的每一行与B表的每一行结合在一起。笛卡尔积返回行数较多，一般不予使用。
 
@@ -211,23 +213,110 @@
     
     
 
-## where 部分
+## WHERE 部分
 
-> ---待20-12-17更新
+> 限制 DQL 返回数据集中行的内容的条件表达式
+>
+> 其目的是限制或减少返回的结果集，WHERE 子句可以更为精准地过滤不必要的数据。当查询返回的数据越少，执行查询时间就越快。
+
+- 算术运算符
+
+  - 四则运算所使用的运算符（+、-、*、/）
+  - 如：`select * from bapp_inst b where rownum = 1+1;  `
+  - 需注意在使用算数运算符时必要情况下，需要使用`()`来明确优先级。
+
+- 比较运算符
+
+  - =, <>或者!=, >=, >, <=, <, IN/NOT IN, BETWEEN ... AND
+
+  - 指定范围内的限制条件,可以比较的对象：字符、数值、日期
+
+  - ANY, SOME, ALL
+
+    - 需要跟在 `=, <>或者!=, >=, >, <=, <` 这些比较运算符后面，处理一个范围内（可以是括号枚举，也可以是子查询形式）
+    - 示例：
+
+      ``````sql
+      --ANY 用法 指数据集中的任何数据 本示例集中类似于 IN 的作用
+      SELECT *
+      FROM employees
+       WHERE salary = ANY (SELECT salary FROM employees WHERE department_id = 30)
+       ORDER BY employee_id;
+      --SOME 的用法与效果和 ANY 等同， ANY 和 SOME 是同义词（）
+      --ALL 指数据集中的所有数据 本示例中等同于 salary >= 3000
+      SELECT *
+        FROM employees
+       WHERE salary >= ALL(1400, 3000)
+       ORDER BY employee_id;
+      
+      
+      ``````
+
+    
+
+- 逻辑运算符
+
+  > 需要说明的是，整个WHERE 条件表达式，其实际返回的逻辑结果类似于布尔值，TRUE 或者 FALSE 。说类似，是因为还存在一个未知。空值用在表达式中时，就会得到未知的逻辑结果，在WHERE 子句中，筛选比较条件中包含空值时会作为 FALSE 对待。比如 A 表B列中包含NULL值的数据，当提取B列大于等于100 的数据时，空值不在提取范围内；当提取B列小于100的数据时，空值也不在提取范围内，只有使用 `WHERE b IS NULL` 才能得到 B 列为空的数据。
+
+  - AND, OR
+  - 在使用时也需要注意括号的使用，明确优先级
 
 
+## SELECT 部分（`select_list`）
 
-## select 部分（`select_list`）
-
+> SELECT 语句用来从一个或者多个表中提取要展示的数据，其中的 SELECT 子句囊括最终展示的列 。虽然书写顺序是在首位，但执行顺序是在获取数据集合范围之后。
+>
 > select_list 可以展开很多，如分析函数、hint 等等，本部分主要介绍一些常用场景下使用的单行函数以及聚合函数
->
-> ---待20-12-17更新
 
-## order by 部分
+### 查询列
 
-> --待20-12-17更新
+- SELECT 子句对列的查询书写方式：
+
+  - 逐一列出列名或对列进行处理的表达式
+
+  - 可以使用关键字 `AS` 对列取别名，如 `SELECT e_name AS employees_name ....` 
+
+  - 当列别名有空格时，可以使用双引号对别名进行范围框定，如：
+
+     `SELECT e_name AS "employees name" ....`  
+
+  - 当想要选取所有列时可以键入`*` 来表示所有，如 `SELECT * FROM emp;` 
+
+- tips 一个小建议，当对列进行处理的表达式过长时，为了输出展示更为直观，强烈建议加列别名。
+
+### 单行函数
+
+> 故名思意，单行函数会在查询表或视图等对象时，每一行返回一个结果行。 而且单行函数可以出现在WHERE子句 和HAVING 等子句中，不局限于SELECT 子句
 >
-> 
+> 此处列出部分常用函数，更多函数可以看ORACLE 官方的 sql-language-reference.pdf 中的第七章 7.Functions
+
+#### 数值函数
+
+#### 字符串函数
+
+- UPPER()，LOWER(), INITCAP() 对字符的大小写进行规范
+- LENGTH() 获取字符串长度
+- REPLACE(), TRANSLATE()
+
+#### 日期函数
+
+#### 转换函数
+
+#### 通用函数
+
+## ORDER BY 部分
+
+> ORDER BY 子句会对查询的最终返回结果进行排序，这也是为什么 ORDER BY 的顺序放在最后的原因
+
+- 升序排列使用关键字 `ASC` ， `ORDRE BY` 子句是默认升序排列的，不写关键字也可以达到升序排列效果
+- 当希望降序排列时，使用 `DESC` 关键字即可，如 `... ORDER BY e_name DESC`
+-  对于空值
+  - 当升序排列时，空值时置于末尾
+  - 当降序排列时，空值置于首位
+  - 若想让空值放在末尾显示，使用 `NULLS LAST` 关键字，如 `... ORDER BY e_name DESC NULLS LAST;`
+  - 若想让空值在首位显示，使用 `NULLS FIRST` 关键字 `... ORDER BY e_name NULLS FIRST;`
+
+
 
 ## 其他
 
@@ -269,7 +358,7 @@
 
 - 差集
   
-  - MINUS
+  - MINUS/EXCEPT
   
     ```sql
     SELECT product_id FROM inventories
@@ -291,7 +380,9 @@ oracle 自带的一张内部表，有一个 `DUMMY` 列,同时始终只有一行
 - 跨用户查询（这个不算远程查询，先放这里）
   - 同一个数据库跨用户查询，若有权限可以直接使用 `username.tablename` 作为表名查询
 
+### SQL 书写规范
 
+- 虽然 SQL 是一个不区分英文大小写字母的语言，但建议的书写规范是关键字大写，其余小写。
 
 
 
@@ -300,6 +391,4 @@ oracle 自带的一张内部表，有一个 `DUMMY` 列,同时始终只有一行
 - [官方SQL 参考手册（DQL部分）](https://docs.oracle.com/en/database/oracle/oracle-database/21/sqlrf/SQL-Queries-and-Subqueries.html#GUID-5937EB2B-D3EC-45D4-BF75-1FC02E45DAE2)
 - [Live SQL 时间格式化](https://livesql.oracle.com/apex/livesql/file/content_BFKOA5UQHDV1MV7HRUDDUEPM4.html)
 - [官方样例数据库](https://www.oracletutorial.com/getting-started/oracle-sample-database) 
-- 
-
- 
+- [ORACLE 11.2版本 ORA ERROR  MESSAGE](https://docs.oracle.com/cd/E11882_01/server.112/e17766/toc.htm)
